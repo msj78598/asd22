@@ -43,7 +43,7 @@ Path("output").mkdir(parents=True, exist_ok=True)
 # -----------------------------
 @st.cache_resource
 def load_models():
-    model_yolo = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH)
+    model_yolo = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
     model_ml = joblib.load(ML_MODEL_PATH)
     scaler = joblib.load(SCALER_PATH)
     return model_yolo, model_ml, scaler
