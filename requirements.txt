@@ -3,7 +3,7 @@ streamlit==1.30.0
 
 # مكتبات تحليل البيانات
 pandas==2.2.3
-numpy==2.1.1
+numpy==1.26.4
 scikit-learn==1.3.2
 scipy==1.11.3
 
@@ -14,7 +14,7 @@ altair==4.2.2
 
 # مكتبات الذكاء الاصطناعي (بدون CUDA)
 torch==2.4.0
-torchvision==0.15.2
+torchvision==0.21.0
 torchaudio==2.4.0
 
 # مكتبات إضافية
