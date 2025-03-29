@@ -25,7 +25,7 @@ MAP_TYPE = "satellite"
 IMG_DIR = "images"
 DETECTED_DIR = "DETECTED_FIELDS/FIELDS/farms"
 MODEL_PATH = "best.pt"
-ML_MODEL_PATH = "final_model.joblib"
+ML_MODEL_PATH = "fisolation_forest_model.joblib"
 SCALER_PATH = "scaler.joblib"
 OUTPUT_EXCEL = "output/detected_low_usage.xlsx"
 
