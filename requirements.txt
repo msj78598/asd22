@@ -12,10 +12,10 @@ matplotlib==3.8.3
 seaborn==0.13.2
 altair==4.2.2
 
-# مكتبات الذكاء الاصطناعي (بدون CUDA)
-torch==2.4.0
+# مكتبات الذكاء الاصطناعي (CUDA مدعوم)
+torch==2.6.0
 torchvision==0.21.0
-torchaudio==2.4.0
+torchaudio==2.6.0
 
 # مكتبات إضافية
 protobuf==3.20.3
