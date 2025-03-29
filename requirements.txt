@@ -1,6 +1,8 @@
 # أساسي لتشغيل التطبيق
 streamlit==1.30.0
 opencv-python-headless==4.9.0.80
+ultralytics==8.1.0
+
 
 # مكتبات تحليل البيانات
 pandas==2.2.3
