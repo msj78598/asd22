@@ -1,3 +1,4 @@
+pip cache purge
 pip==25.0.1
 affine==2.4.0
 altair==4.2.2
