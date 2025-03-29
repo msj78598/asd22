@@ -4,11 +4,11 @@ import pandas as pd
 import requests
 from pathlib import Path
 from PIL import Image, ImageDraw
-import torch
 import joblib
 from sklearn.preprocessing import StandardScaler
 import streamlit as st
 import urllib.parse
+from ultralytics import YOLO
 
 # -----------------------------
 # إعدادات عامة
@@ -43,7 +43,10 @@ Path("output").mkdir(parents=True, exist_ok=True)
 # -----------------------------
 @st.cache_resource
 def load_models():
-    model_yolo = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
+    if not os.path.isfile(MODEL_PATH):
+        st.error(f"❗ لم يتم العثور على النموذج في المسار: {MODEL_PATH}")
+        st.stop()
+    model_yolo = YOLO(MODEL_PATH)
     model_ml = joblib.load(ML_MODEL_PATH)
     scaler = joblib.load(SCALER_PATH)
     return model_yolo, model_ml, scaler
@@ -73,8 +76,8 @@ def pixel_to_area(lat, box):
     return width_m * height_m
 
 def detect_field(img_path, meter_id, info, model):
-    results = model(img_path)
-    df_result = results.pandas().xyxy[0]
+    results = model.predict(img_path)
+    df_result = results[0].pandas().xyxy[0]
     fields = df_result[df_result["name"] == "field"]
     if not fields.empty:
         confidence = round(fields["confidence"].max() * 100, 2)
@@ -107,13 +110,6 @@ def predict_loss(info, model_ml, scaler):
     X_scaled = scaler.transform(X)
     return model_ml.predict(X_scaled)[0]
 
-def generate_whatsapp_share_link(meter_id, confidence, area, location_link, quantity, capacity, office_number, priority):
-    message = f"حالة عداد {meter_id}:\nالمكتب: {office_number}\nأولوية: {priority}\nثقة: {confidence}%\nمساحة: {area} م²\nالاستهلاك: {quantity}\nسعة القاطع: {capacity}\nالموقع: {location_link}"
-    return f"https://wa.me/?text={urllib.parse.quote(message)}"
-
-def generate_google_maps_link(lat, lon):
-    return f"https://www.google.com/maps?q={lat},{lon}"
-
 # -----------------------------
 # واجهة Streamlit
 # -----------------------------
@@ -129,7 +125,6 @@ if uploaded_file:
         st.stop()
 
     results = []
-    gallery = []
     progress = st.progress(0)
 
     for idx, row in df.iterrows():
@@ -144,10 +139,10 @@ if uploaded_file:
                 high_priority_condition = (conf >= 85 and row['الكمية'] == 0) or (row['Breaker Capacity'] < 200)
                 priority = determine_priority(conf >= 85, anomaly, consumption_check, high_priority_condition)
                 results.append({**row, "الثقة": conf, "المساحة": area, "الأولوية": priority})
-                gallery.append((conf, priority, img_detected, meter_id, area, lat, lon, row['الكمية'], row['Breaker Capacity'], row['المكتب']))
 
         progress.progress((idx+1)/len(df))
 
     df_final = pd.DataFrame(results)
+    st.dataframe(df_final)
     df_final.to_excel(OUTPUT_EXCEL, index=False)
     st.download_button("📥 تحميل النتائج", data=open(OUTPUT_EXCEL, "rb"), file_name="results.xlsx")
