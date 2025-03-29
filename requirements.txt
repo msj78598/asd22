@@ -2,8 +2,6 @@
 streamlit==1.30.0
 opencv-python-headless==4.9.0.80
 ultralytics==8.1.0
-opencv-python-headless
-
 
 # مكتبات تحليل البيانات
 pandas==2.2.3
@@ -18,9 +16,9 @@ seaborn==0.13.2
 altair==4.2.2
 
 # مكتبات الذكاء الاصطناعي (CUDA مدعوم)
-torch==2.6.0
-torchvision==0.21.0
-torchaudio==2.6.0
+torch==2.2.2
+torchvision==0.17.2
+torchaudio==2.2.2
 
 # مكتبات إضافية
 protobuf==3.20.3
